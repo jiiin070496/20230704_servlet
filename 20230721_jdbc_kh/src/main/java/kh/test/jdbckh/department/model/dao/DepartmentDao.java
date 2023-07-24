@@ -56,5 +56,47 @@ public class DepartmentDao {
 		return result;
 		
 	}
+	public DepartmentVo selectOneDepartment(String DepartmentNo) {
+		System.out.println("DAO selectOneDepartment() arg:"+ DepartmentNo);
+
+		DepartmentVo result = null;
+		String query = "select * from tb_department where department_no = "+"'"+DepartmentNo+"'";
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			conn = DriverManager.getConnection("jdbc:oracle:thin:@127.0.0.1:1521:xe","kh","kh");
+
+			pstmt = conn.prepareStatement(query);
+			rset = pstmt.executeQuery();
+			if(rset.next()) {
+				result = new DepartmentVo();
+				// while 동작시킬필요없음. query 결과가 단일행일 것이므로
+				result.setDepartmentNo(rset.getString("department_No"));
+				result.setDepartmentName(rset.getString("department_Name"));
+				result.setCategory(rset.getString("category"));
+				result.setOpenYn(rset.getString("open_Yn"));
+				result.setCapacity(rset.getInt("capacity"));
+				
+				
+			}
+		}catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(rset!=null) rset.close();
+				if(pstmt!=null) pstmt.close();
+				if(conn!=null) conn.close();
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		System.out.println(result);
+		return result;
+		
+	}
 	
 }

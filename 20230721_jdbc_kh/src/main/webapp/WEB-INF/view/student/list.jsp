@@ -38,7 +38,7 @@
 		%>
 		
 		<tr>
-			<%-- 학번 누르면 페이지 변경. ex)/student/get?sno=A131333 --%>
+			<!-- 학번 누르면 페이지 변경. ex)/student/get?sno=A131333 -->
 			<td><a href="<%=request.getContextPath()%>/student/get?sno=<%=vo.getStudentNo()%>"><%=vo.getStudentNo()%></a></td>
 			<td><%=vo.getDepartmentNo() %></td>
 			<td><%=vo.getStudentName() %></td>

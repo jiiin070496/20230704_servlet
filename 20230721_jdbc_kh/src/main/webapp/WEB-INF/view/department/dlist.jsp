@@ -28,8 +28,8 @@
 		%>
 		
 		<tr>
-			<%-- 학번 누르면 페이지 변경. ex)/student/get?sno=A131333 --%>
-		 	<td><a href="<%=request.getContextPath()%>/department/get?sno=<%=vo.getDepartmentNo()%>"><%=vo.getDepartmentNo()%></a></td>
+			<%-- 학번 누르면 페이지 변경. ex)/student/get?no=A131333 --%>
+		 	<td><a href="<%=request.getContextPath()%>/department/dget?dno=<%=vo.getDepartmentNo()%>"><%=vo.getDepartmentNo()%></a></td>
 			<%-- <td><%=vo.getDepartmentNo() %></td> --%>
 			<td><%=vo.getDepartmentName() %></td>
 			<td><%=vo.getCategory() %></td>

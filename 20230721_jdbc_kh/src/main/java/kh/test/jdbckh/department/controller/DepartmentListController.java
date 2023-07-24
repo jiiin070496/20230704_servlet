@@ -15,7 +15,7 @@ import kh.test.jdbckh.department.model.vo.DepartmentVo;
 /**
  * Servlet implementation class DepartmentListController
  */
-@WebServlet("/department/list")
+@WebServlet("/department/dlist")
 public class DepartmentListController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        

@@ -72,56 +72,61 @@ public class StudentDao {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-		}
-				
-//		 확인용 System.out.println(result);
-		return result;
-		
-	} 
+		}				
+		return result;		
+	}
 	
-	public List<StudentVo> selectOneStudent() {
-		List<StudentVo> result = null;
-		Connection conn = null;
-		Statement stmt = null;
-		PreparedStatement pstmt = null;
-		
-		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "kh", "kh");
-			String query = "select * from tb_student";
-			pstmt = conn.prepareStatement(query);
-			ResultSet rs = pstmt.executeQuery();
+			public StudentVo selectOneStudent(String studentNo) {
+				System.out.println("DAO selectOneStudent() arg:"+ studentNo);
 
-			result = new ArrayList<StudentVo>();
-			while(rs.next() == true) {
-				StudentVo vo = new StudentVo();
-				vo.setStudentName(rs.getString("student_name"));
-				vo.setDepartmentNo(rs.getString("department_no"));
-				vo.setStudentNo(rs.getString("student_no"));
-				vo.setStudentSsn(rs.getString("student_ssn"));
-				vo.setStudentAddress(rs.getString("student_address"));
-				vo.setEntranceDate(rs.getDate("entrance_date"));
-				vo.setAbsenceYn(rs.getString("absence_yn"));
-				vo.setCoachProfessorNo(rs.getString("coach_professor_no"));
+				StudentVo result = null;
+//				String query = "select * from tb_student where student_no = "+"'"+studentNo+"'";
+				String query = "select * from tb_student join tb_department using(department_no) where student_no = ?";
+
 				
-				result.add(vo);
-			}
-			
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if(stmt!=null) stmt.close();
-				if(pstmt!=null) pstmt.close();
-				if(conn!=null) conn.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+				
+				Connection conn = null;
+				PreparedStatement pstmt = null;
+				ResultSet rset = null;
+				
+				try {
+					Class.forName("oracle.jdbc.driver.OracleDriver");
+					conn = DriverManager.getConnection("jdbc:oracle:thin:@127.0.0.1:1521:xe","kh","kh");
+//					if(conn==null) {
+//						System.out.println("연결실패");
+//					}else {
+//						System.out.println("연결 성공");
+//					}
+					pstmt = conn.prepareStatement(query);
+					// 여기서 ? 위치폴더에 값넣기
+					pstmt.setString(0, studentNo);
+					rset = pstmt.executeQuery();
+					if(rset.next()) {
+						result = new StudentVo();
+						// while 동작시킬필요없음. query 결과가 단일행일 것이므로
+						result.setAbsenceYn(rset.getString("Absence_Yn"));
+						result.setCoachProfessorNo(rset.getString("Coach_Professor_No"));
+						result.setDepartmentNo(rset.getString("Department_No"));
+						result.setEntranceDate(rset.getDate("Entrance_Date"));
+						result.setStudentAddress(rset.getString("Student_Address"));
+						result.setStudentName(rset.getString("student_Name"));
+						result.setStudentNo(rset.getString("student_No"));
+						result.setStudentSsn(rset.getString("Student_Ssn"));
+					}
+				}catch (Exception e) {
+					e.printStackTrace();
+				}finally {
+					try {
+						if(rset!=null) rset.close();
+						if(pstmt!=null) pstmt.close();
+						if(conn!=null) conn.close();
+					} catch (Exception e2) {
+						e2.printStackTrace();
+					}
+				}
+				System.out.println(result);
+				return result;
 		}
-				
-		return result;
 	}
 
-}
+

@@ -40,8 +40,7 @@ public class StudentGetController extends HttpServlet {
 			StudentVo vo = dao.selectOneStudent(studentNo);
 			
 			// 3. DB로부터 전달받은 데이터를 JSP에 전달함
-			request.setAttribute("svo", vo);
-			
+			request.setAttribute("svo", vo);			
 			// 4. JSP 파일 FORWARD로 열기
 			request.getRequestDispatcher("/WEB-INF/view/student/get.jsp").forward(request, response);
 	}

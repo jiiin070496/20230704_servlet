@@ -80,8 +80,8 @@ public class StudentDao {
 				System.out.println("DAO selectOneStudent() arg:"+ studentNo);
 
 				StudentVo result = null;
-//				String query = "select * from tb_student where student_no = "+"'"+studentNo+"'";
-				String query = "select * from tb_student join tb_department using(department_no) where student_no = ?";
+				String query = "select * from tb_student where student_no = "+"'"+studentNo+"'";
+//				String query = "select * from tb_student join tb_department using(department_no) where student_no = ?";
 
 				
 				
@@ -99,7 +99,7 @@ public class StudentDao {
 //					}
 					pstmt = conn.prepareStatement(query);
 					// 여기서 ? 위치폴더에 값넣기
-					pstmt.setString(0, studentNo);
+//					pstmt.setString(0, studentNo);
 					rset = pstmt.executeQuery();
 					if(rset.next()) {
 						result = new StudentVo();

@@ -78,5 +78,50 @@ public class StudentDao {
 		return result;
 		
 	} 
+	
+	public List<StudentVo> selectOneStudent() {
+		List<StudentVo> result = null;
+		Connection conn = null;
+		Statement stmt = null;
+		PreparedStatement pstmt = null;
+		
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "kh", "kh");
+			String query = "select * from tb_student";
+			pstmt = conn.prepareStatement(query);
+			ResultSet rs = pstmt.executeQuery();
+
+			result = new ArrayList<StudentVo>();
+			while(rs.next() == true) {
+				StudentVo vo = new StudentVo();
+				vo.setStudentName(rs.getString("student_name"));
+				vo.setDepartmentNo(rs.getString("department_no"));
+				vo.setStudentNo(rs.getString("student_no"));
+				vo.setStudentSsn(rs.getString("student_ssn"));
+				vo.setStudentAddress(rs.getString("student_address"));
+				vo.setEntranceDate(rs.getDate("entrance_date"));
+				vo.setAbsenceYn(rs.getString("absence_yn"));
+				vo.setCoachProfessorNo(rs.getString("coach_professor_no"));
+				
+				result.add(vo);
+			}
+			
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(stmt!=null) stmt.close();
+				if(pstmt!=null) pstmt.close();
+				if(conn!=null) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+				
+		return result;
+	}
 
 }

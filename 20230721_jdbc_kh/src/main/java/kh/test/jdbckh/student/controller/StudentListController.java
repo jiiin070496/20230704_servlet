@@ -33,15 +33,33 @@ public class StudentListController extends HttpServlet {
 		System.out.println("/student/list doget() 진입");
 		// 1. 전달받은 parameter 읽어내기
 		String searchWord = request.getParameter("searchWord");
-		// 2. 전달받은 대이터를 활용해 DB학생 상제 정보 가져오기		
+		String pageNoStr = request.getParameter("pageNo");
+
+		// String --> int
+		int currentPage = 1;
+		if(pageNoStr != null) {
+			try {
+				currentPage = Integer.parseInt(pageNoStr);
+			} catch (NumberFormatException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		//// 2. 전달받은 데이터를 활용해 
+		// 2. DB학생 상세 정보 가져오기
 		StudentDao dao = new StudentDao();
 		List<StudentVo> result = null;
+		
 		if(searchWord != null) {
+			//검색기능
 //			System.out.println("[koong] : " + searchWord);
 			result = dao.selectListStudent(searchWord);
 		}else {
-			result = dao.selectListStudent();
+			//전체보기
+			//result = dao.selectListStudent();		
 			
+			//페이징
+			result = dao.selectListStudent(currentPage, 10);
 		}
 		
 		//3. DB로부터 전달받은 데이터를 jsp에 전달

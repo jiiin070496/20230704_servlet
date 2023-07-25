@@ -10,17 +10,35 @@
 </head>
 <body>
 	<h2>학과 리스트</h2>
+	<div>
+		<form action="<%=request.getContextPath()%>/department/dlist" method="get">
+			<input type="search" name="searchWord">
+			<input type="button" value="찾기">
+		</form>
+	</div>
+	
 	<% 
 	List<DepartmentVo> volist = (List<DepartmentVo>)request.getAttribute("departmentList");
+	String searchWord = (String)request.getAttribute("searchWord");
+	if(searchWord != null){
+		%>
+		<h3><%=searchWord %>검색결과</h3>
+		<h5><a href="<%=request.getContextPath()%>/department/dlist">전체보기</a></h5>		
+		<% 
+	}
+	if(volist == null || volist.size() == 0){
+		%>
+		<h2>결과물이 없습니다.</h2>
+		<% 
+	}else{
+	
 	%>
 	
 	<table border = "1">
 		<tr>
 			<th>학과 번호</th>
 			<th>학과명</th>
-			<th>과분류</th>
-			<th>개강여부</th>
-			<th>인원수</th>
+
 		</tr>
 		<%
 		for(int i = 0; i <volist.size(); i++){
@@ -32,9 +50,6 @@
 		 	<td><a href="<%=request.getContextPath()%>/department/dget?dno=<%=vo.getDepartmentNo()%>"><%=vo.getDepartmentNo()%></a></td>
 			<%-- <td><%=vo.getDepartmentNo() %></td> --%>
 			<td><%=vo.getDepartmentName() %></td>
-			<td><%=vo.getCategory() %></td>
-			<td><%=vo.getOpenYn() %></td>
-			<td><%=vo.getCapacity() %></td>
 		</tr>
 		
 		
@@ -42,5 +57,10 @@
 		}
 		%>
 	</table>
+	<% 
+	}
+	%>
+	
+	
 	</body>
 </html>

@@ -31,10 +31,24 @@ public class StudentListController extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("/student/list doget() 진입");
-		//TODO DB
+		// 1. 전달받은 parameter 읽어내기
+		String searchWord = request.getParameter("searchWord");
+		// 2. 전달받은 대이터를 활용해 DB학생 상제 정보 가져오기		
 		StudentDao dao = new StudentDao();
-		List<StudentVo> result = dao.selectListStudent();
+		List<StudentVo> result = null;
+		if(searchWord != null) {
+//			System.out.println("[koong] : " + searchWord);
+			result = dao.selectListStudent(searchWord);
+		}else {
+			result = dao.selectListStudent();
+			
+		}
+		
+		//3. DB로부터 전달받은 데이터를 jsp에 전달
 		request.setAttribute("studentList", result);
+		if(searchWord != null) {
+			request.setAttribute("searchWord", searchWord);
+		}
 //		request.setAttribute("aaa", "그냥속성값테스트해bom");
 //		request.setAttribute("bbb", "그냥속성값테스트해bom2");
 //		request.setAttribute("ccc", 333);

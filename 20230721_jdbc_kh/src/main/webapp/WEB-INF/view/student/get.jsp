@@ -48,7 +48,9 @@
 		<tr>
 			<td>담당교수번호</td>
 			<td><%=vo.getCoachProfessorNo() %></td>
-		</tr>
+		</tr>		
 	</table>
+	
+		<h5><a href="<%=request.getContextPath()%>/student/list">메인으로</a></h5>
 </body>
 </html>

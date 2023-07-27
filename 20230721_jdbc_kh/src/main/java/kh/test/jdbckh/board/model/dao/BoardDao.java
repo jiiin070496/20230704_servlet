@@ -13,140 +13,156 @@ import kh.test.jdbckh.board.model.dto.BoardDto;
 
 public class BoardDao {
 
-	//모든 행 읽기
-	public List<BoardDto> selectList(Connection conn){
+	// 모든 행 읽기
+	public List<BoardDto> selectList(Connection conn) {
 		System.out.println("[board Dao selectList]");
 		List<BoardDto> result = new ArrayList<BoardDto>();
-		
-		String subquery = " select BNO, BTITLE, to_char(BWRITE_DATE, 'yyyy-mm-dd hh24:mi:ss') BWRITE_DATE, MID, BREF, BRE_LEVEL, BRE_STEP from BOARD ";		subquery += "order by BREF desc, BRE_STEP asc"; // 정렬 순서
+
+		String subquery = " select BNO, BTITLE, to_char(BWRITE_DATE, 'yyyy-mm-dd hh24:mi:ss') BWRITE_DATE, MID, BREF, BRE_LEVEL, BRE_STEP from BOARD ";
+		subquery += "order by BREF desc, BRE_STEP asc"; // 정렬 순서
 		String query = subquery;
-		
+
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		
+
 		try {
 			pstmt = conn.prepareStatement(query);
 			rs = pstmt.executeQuery();
-		
-			while(rs.next()==true) {
-				BoardDto dto = new BoardDto(
-						rs.getInt("BNO"),
-						rs.getString("BTITLE"),
-						rs.getString("BWRITE_DATE"),
-						rs.getString("MID"),
-						rs.getInt("BREF"),
-						rs.getInt("BRE_LEVEL"),
-						rs.getInt("BRE_STEP")
-						);
+
+			while (rs.next() == true) {
+				BoardDto dto = new BoardDto(rs.getInt("BNO"), rs.getString("BTITLE"), rs.getString("BWRITE_DATE"),
+						rs.getString("MID"), rs.getInt("BREF"), rs.getInt("BRE_LEVEL"), rs.getInt("BRE_STEP"));
 				result.add(dto);
 			}
-		}catch(Exception e) {
-			e.printStackTrace();	
-		}finally {
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
 			close(rs);
-			close(pstmt);			
+			close(pstmt);
 		}
 		System.out.println("[Board Dao selectList] return: " + result);
 		return result;
 	}
-	
-	//한 행 읽기 - pk로 where 조건
+
+	// 한 행 읽기 - pk로 where 조건
 	public BoardDto selectOne(Connection conn, int bno) {
-		System.out.println("[board Dao selectOne] bno: "+ bno);
+		System.out.println("[board Dao selectOne] bno: " + bno);
 		BoardDto result = null;
-		//TODO
+		// TODO
 		System.out.println("[board Dao selectOne] return: " + result);
-		return result;		
+		return result;
 	}
-	
-	//한 행 삽입 = BoardDto 자료형을 받아와야함
+
+	// 한 행 삽입 = BoardDto 자료형을 받아와야함
 	public int insert(Connection conn, BoardDto dto) {
 		System.out.println("[board Dao insert] dto: "+ dto);
 		int result = 0;
-		//TODO
+		String query = "insert into board"
+						+ " (BNO, BTITLE, BWRITE_DATE, MID, BREF, BRE_LEVEL, BRE_STEP)"
+						+ "values(?,?, to_date(?, 'yyyy-mm-dd hh24:mi:ss'), ?,?,?,?)";
+		
+		PreparedStatement pstmt = null;
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, dto.getBno());
+			pstmt.setString(2, dto.getbTitle());
+//			pstmt.setString(3, dto.getbContent());
+			pstmt.setString(3, dto.getbWriteDate());
+			pstmt.setString(4, dto.getmId());
+			pstmt.setInt(5, dto.getBref());
+			pstmt.setInt(6, dto.getBreLevel());
+			pstmt.setInt(6, dto.getBreStep());
+			result = pstmt.executeUpdate();
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally {
+			close(pstmt);
+		}
 		System.out.println("[board Dao insert] return: " + result);
 		return result;		
 	}
-	
-	//한 행 수정 boardDto 또는 경우에 따라서 특정 컬럼값만 받아오기도 함.
+
+	// 한 행 수정 boardDto 또는 경우에 따라서 특정 컬럼값만 받아오기도 함.
 	public int update(Connection conn, BoardDto dto) {
-			System.out.println("[board Dao update] dto: "+ dto);
-			int result = 0;
-			//TODO
-			System.out.println("[board Dao update] return: " + result);
-			return result;		
+		System.out.println("[board Dao update] dto: " + dto);
+		int result = 0;
+		// TODO
+		System.out.println("[board Dao update] return: " + result);
+		return result;
 	}
-	
-	//한 행 삭제 - 주로 pk로 where 조건
+
+	// 한 행 삭제 - 주로 pk로 where 조건
 	public int delete(Connection conn, BoardDto dto) {
-			System.out.println("[board Dao delete] dto: "+ dto);
-			int result = 0;
-			//TODO
-			System.out.println("[board Dao delete] return: " + result);
-			return result;		
+		System.out.println("[board Dao delete] dto: " + dto);
+		int result = 0;
+		// TODO
+		System.out.println("[board Dao delete] return: " + result);
+		return result;
 	}
-	
-	//추가
-	//페이징 처리 (pageSize!=0이 아닐때) + 검색(있다면 where처리)
+
+	// 추가
+	// 페이징 처리 (pageSize!=0이 아닐때) + 검색(있다면 where처리)
 	public int getTotalCount(Connection conn, String searchWord) {
-		System.out.println("[board Dao getTotalCount] searchWord: "+ searchWord);
-		
+		System.out.println("[board Dao getTotalCount] searchWord: " + searchWord);
+
 		int result = 0;
 		String query = "select count(*) cnt from board";
-		if(searchWord != null) { // 검색(있다면 where 처리)
+		if (searchWord != null) { // 검색(있다면 where 처리)
 			query += "where btitle like ? or bcontent like ? or mid like ? ";
-			searchWord = "%"+searchWord+"%";
+			searchWord = "%" + searchWord + "%";
 		}
-		
+
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		
+
 		try {
 			pstmt = conn.prepareStatement(query);
-			if(searchWord!=null) {
+			if (searchWord != null) {
 				pstmt.setString(1, searchWord);
 				pstmt.setString(2, searchWord);
 				pstmt.setString(3, searchWord);
 			}
 			rs = pstmt.executeQuery();
-			
-			if(rs.next()) {
+
+			if (rs.next()) {
 				result = rs.getInt("cnt");
 			}
-		}catch(SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		System.out.println("[Board Dao getTotalCount] return:" + result);
 		return result;
-		
+
 	}
-	
-	public List<BoardDto> selectList(Connection conn, int currentPage, int pageSize, int totalCount, String searchWord){
-		
-		System.out.println("[Board Dao selectList] currentPage:" + currentPage + ",pageSize:" + pageSize + ",totalCount:" + totalCount + ",searchWord:" + searchWord);
-		
-		//페이징처리 방정식
+
+	public List<BoardDto> selectList(Connection conn, int currentPage, int pageSize, int totalCount,
+			String searchWord) {
+
+		System.out.println("[Board Dao selectList] currentPage:" + currentPage + ",pageSize:" + pageSize
+				+ ",totalCount:" + totalCount + ",searchWord:" + searchWord);
+
+		// 페이징처리 방정식
 		int startRownum = 0;
 		int endRownum = 0;
-		if(pageSize > 0) { //페이징 처리(pageSize!=0이 아닐때)
-			startRownum = (currentPage - 1)* pageSize + 1;
+		if (pageSize > 0) { // 페이징 처리(pageSize!=0이 아닐때)
+			startRownum = (currentPage - 1) * pageSize + 1;
 			endRownum = ((currentPage * pageSize) > totalCount) ? totalCount : (currentPage * pageSize);
-			System.out.println("startRownum:" + startRownum + ", endRownum:" + endRownum);			
+			System.out.println("startRownum:" + startRownum + ", endRownum:" + endRownum);
 		}
-	
+
 		List<BoardDto> result = new ArrayList<BoardDto>();
 		String subquery = "select BNO, BTITLE, to_char(BWRITE_DATE, 'yyyy-mm-dd hh24:mi:ss') BWRITE_DATE, MID, BREF, BRE_LEVEL, BRE_STEP from BOARD ";
-		if(searchWord!=null){
+		if (searchWord != null) {
 			subquery += "where btitle like ? or bcontent like ? or mid like ? ";
-			searchWord = "%"+searchWord+"%";
+			searchWord = "%" + searchWord + "%";
 		}
 		subquery += "order by dref descm bre_step asc"; // 정렬순서
 		String query = subquery;
-		if(pageSize > 0) { // 페이징처리
+		if (pageSize > 0) { // 페이징처리
 			query = "select * from ( select ROWNUM rnum, tb1.* from " + "(" + subquery + ") tb1 " + " )";
 			query += "where rnum between ? and ?";
 		}
-		
+
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		try {
@@ -174,15 +190,8 @@ public class BoardDao {
 //				BREF        NOT NULL NUMBER         
 //				BRE_LEVEL   NOT NULL NUMBER         
 //				BRE_STEP    NOT NULL NUMBER
-				BoardDto dto = new BoardDto(
-						rs.getInt("BNO"),
-						rs.getString("BTITLE"),
-						rs.getString("BWRITE_DATE"),
-						rs.getString("MID"),
-						rs.getInt("BREF"),
-						rs.getInt("BRE_LEVEL"),
-						rs.getInt("BRE_STEP")					
-						);
+				BoardDto dto = new BoardDto(rs.getInt("BNO"), rs.getString("BTITLE"), rs.getString("BWRITE_DATE"),
+						rs.getString("MID"), rs.getInt("BREF"), rs.getInt("BRE_LEVEL"), rs.getInt("BRE_STEP"));
 				result.add(dto);
 			}
 		} catch (SQLException e) {
@@ -192,6 +201,6 @@ public class BoardDao {
 			close(pstmt);
 		}
 		System.out.println("[Board Dao selectList] return:" + result);
-		return result;	
+		return result;
 	}
 }

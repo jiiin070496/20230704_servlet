@@ -2,6 +2,7 @@ package kh.test.jdbckh.student.controller;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -9,7 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import kh.test.jdbckh.student.model.dao.StudentDao;
+import kh.test.jdbckh.student.model.service.StudentService;
 import kh.test.jdbckh.student.model.vo.StudentVo;
 
 /**
@@ -36,7 +37,8 @@ public class StudentListController extends HttpServlet {
 		String pageNoStr = request.getParameter("pageNo");
 
 		// String --> int
-		int currentPage = 1;
+		int currentPage = 1; // 현재 페이지
+		int pageSize = 10; // 페이지당 개수
 		if(pageNoStr != null) {
 			try {
 				currentPage = Integer.parseInt(pageNoStr);
@@ -47,23 +49,40 @@ public class StudentListController extends HttpServlet {
 		
 		//// 2. 전달받은 데이터를 활용해 
 		// 2. DB학생 상세 정보 가져오기
-		StudentDao dao = new StudentDao();
-		List<StudentVo> result = null;
+		StudentService service = new StudentService();
+		Map<String, Object> map = null;
 		
 		if(searchWord != null) {
 			//검색기능
-//			System.out.println("[koong] : " + searchWord);
-			result = dao.selectListStudent(searchWord);
-		}else {
+			//result = service.selectListStudent(searchWord);
+			map = service.selectListStudent(currentPage, pageSize, searchWord);
+			} else {
 			//전체보기
 			//result = dao.selectListStudent();		
 			
 			//페이징
-			result = dao.selectListStudent(currentPage, 10);
+			map = service.selectListStudent(currentPage, 10);
 		}
 		
 		//3. DB로부터 전달받은 데이터를 jsp에 전달
-		request.setAttribute("studentList", result);
+		request.setAttribute("studentList", map.get("studentList"));
+		// 페이징 - 
+		int pageBlockSize = 5;
+		int totalCnt = (Integer)map.get("totalCnt");
+		int totalPageNum = totalCnt/pageSize + (totalCnt%pageSize == 0 ? 0 : 1);
+		
+		int startPageNum = 1;
+		if((currentPage%pageBlockSize) == 0) {
+			startPageNum = ((currentPage/pageBlockSize)-1)*pageBlockSize +1;
+		} else {
+			startPageNum = ((currentPage/pageBlockSize))*pageBlockSize +1;
+		}
+		int endPageNum = (startPageNum+pageBlockSize > totalPageNum) ? totalPageNum : startPageNum+pageBlockSize-1;
+		request.setAttribute("totalPageNum", totalPageNum);
+		request.setAttribute("startPageNum", startPageNum);
+		request.setAttribute("endPageNum", endPageNum);
+		request.setAttribute("currentPage", currentPage);
+		
 		if(searchWord != null) {
 			request.setAttribute("searchWord", searchWord);
 		}

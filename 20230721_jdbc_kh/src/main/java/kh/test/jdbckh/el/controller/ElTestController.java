@@ -1,37 +1,27 @@
-package kh.test.jdbckh.board.controller;
+package kh.test.jdbckh.el.controller;
 
 import java.io.IOException;
-import java.util.List;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import kh.test.jdbckh.board.model.dto.BoardDto;
 import kh.test.jdbckh.board.model.service.BoardService;
+import kh.test.jdbckh.student.model.service.StudentService;
 
 /**
- * Servlet implementation class BoardListServlet
+ * Servlet implementation class ElTestController
  */
-@WebServlet("/board/list")
-public class BoardListServlet extends HttpServlet {
+@WebServlet("/eltest")
+public class ElTestController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//1. request.getParameter();
-		
-		//2. service.selectList();
-		List<BoardDto> result = new BoardService().selectList();		
-		//3.
-		request.setAttribute("boardList", result);
-		//4.
-		request.getRequestDispatcher("/WEB-INF/view/board/list.jsp").forward(request, response);	
-		System.out.println(result);
+		request.setAttribute("a1", "aaa");	
+		request.setAttribute("volist", new BoardService().selectList());	
+		request.setAttribute("vo", new StudentService().selectOneStudent("A213046"));	
+		request.getRequestDispatcher("/WEB-INF/view/eltest.jsp").forward(request, response);
 	}
 
 	/**

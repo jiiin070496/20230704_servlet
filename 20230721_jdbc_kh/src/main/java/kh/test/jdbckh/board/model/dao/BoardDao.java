@@ -67,9 +67,9 @@ public class BoardDao {
 		
 		try {
 			pstmt = conn.prepareStatement(query);
-			pstmt.setString(1, dto.getbTitle());
-			pstmt.setString(2, dto.getbContent());
-			pstmt.setString(3, dto.getmId());
+			pstmt.setString(1, dto.getBtitle());
+			pstmt.setString(2, dto.getBcontent());
+			pstmt.setString(3, dto.getMid());
 			if(dto.getBno()!=0) {
 				pstmt.setInt(1, dto.getBno());
 				pstmt.setInt(2, dto.getBno());

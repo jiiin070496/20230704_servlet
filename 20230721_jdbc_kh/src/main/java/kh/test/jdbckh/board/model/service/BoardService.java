@@ -65,13 +65,13 @@ public class BoardService {
 		return result;
 	}
 	
-//	public int delete(int bno) {
-//		int result = 0;
-//		Connection conn = getConnectionkhl();
-//		result = dao.delete(conn, bno);
-//		close(conn);
-//		return result;
-//	}
+	public int delete(int bno) {
+		int result = 0;
+		Connection conn = getConnectionkhl();
+		result = dao.delete(conn, null);
+		close(conn);
+		return result;
+	}
 //	
 	public int getTotalCount(String searchWord) {
 		int result = 0;

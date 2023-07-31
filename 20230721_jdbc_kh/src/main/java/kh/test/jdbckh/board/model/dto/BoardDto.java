@@ -14,107 +14,120 @@ public class BoardDto {
 //			BRE_STEP    NOT NULL NUMBER   
 
 	private int bno;
-	private String bTitle;
-	private String bContent;
-	private String bWriteDate;
-	private String mId;
+	private String btitle;
+	private String bcontent;
+	private String bwriteDate;
+	private String mid;
 	private int bref;
 	private int breLevel;
 	private int breStep;
-	
-	//public BoardDto() {} 기본생성자를 없애기도 함.
-	
-	//selectOne 일때 사용 dao-> controller -> view
-	public BoardDto(int bno, String bTitle, String bContent, String bWriteDate, String mId, int bref, int breLevel,
+
+	// selectOne dao --> controll --> view
+	public BoardDto(int bno, String btitle, String bcontent, String bwriteDate, String mid, int bref, int breLevel,
 			int breStep) {
 		this.bno = bno;
-		this.bTitle = bTitle;
-		this.bContent = bContent;
-		this.bWriteDate = bWriteDate;
-		this.mId = mId;
-		this.bref = bref;
-		this.breLevel = breLevel;
-		this.breStep = breStep;
-	}	
-	
-	//selectList 상황으로 content없어도 됌. dao->controller->view
-	public BoardDto(int bno, String bTitle, String bWriteDate, String mId, int bref, int breLevel, int breStep) {
-		this.bno = bno;
-		this.bTitle = bTitle;
-		//content없음
-		this.bWriteDate = bWriteDate;
-		this.mId = mId;
+		this.btitle = btitle;
+		this.bcontent = bcontent;
+		this.bwriteDate = bwriteDate;
+		this.mid = mid;
 		this.bref = bref;
 		this.breLevel = breLevel;
 		this.breStep = breStep;
 	}
 
-	//원본글 등록 view -> controller -->dao
-	public BoardDto(String bTitle, String bContent, String mId) {
-		this.bTitle = bTitle;
-		this.bContent = bContent;
-		this.mId = mId;
+	// selectList(content없음) dao --> controll --> view
+	public BoardDto(int bno, String btitle, String bwriteDate, String mid, int bref, int breLevel, int breStep) {
+		this.bno = bno;
+		this.btitle = btitle;
+		// content 없음
+		this.bwriteDate = bwriteDate;
+		this.mid = mid;
+		this.bref = bref;
+		this.breLevel = breLevel;
+		this.breStep = breStep;
 	}
 
-	// 답글 등록 view -> controller -->dao
-	public BoardDto(int bno, String bTitle, String bContent, String mId) {
-		this.bno = bno;
-		this.bTitle = bTitle;
-		this.bContent = bContent;
-		this.mId = mId;
+	// 원본글 등록 view --> controller --> dao
+	public BoardDto(String btitle, String bcontent, String mid) {
+		this.btitle = btitle;
+		this.bcontent = bcontent;
+		this.mid = mid;
+	}
+
+	// 답글 등록 view --> controller --> dao
+	public BoardDto(int bno, String btitle, String bcontent, String mid) {
+		this.bno = bno; // bno는 답글 달려는 글번호
+		this.btitle = btitle;
+		this.bcontent = bcontent;
+		this.mid = mid;
 	}
 
 	@Override
 	public String toString() {
-		return "BoardDto [bno=" + bno + ", bTitle=" + bTitle + ", bContent=" + bContent + ", bWriteDate=" + bWriteDate
-				+ ", mId=" + mId + ", bref=" + bref + ", breLevel=" + breLevel + ", breStep=" + breStep + "]";
+		return "BoardDto [bno=" + bno + ", btitle=" + btitle + ", bcontent=" + bcontent + ", bwriteDate=" + bwriteDate
+				+ ", mid=" + mid + ", bref=" + bref + ", breLevel=" + breLevel + ", breStep=" + breStep + "]";
 	}
-	
+
 	public int getBno() {
 		return bno;
 	}
+
 	public void setBno(int bno) {
 		this.bno = bno;
 	}
-	public String getbTitle() {
-		return bTitle;
+
+	public String getBtitle() {
+		return btitle;
 	}
-	public void setbTitle(String bTitle) {
-		this.bTitle = bTitle;
+
+	public void setBtitle(String btitle) {
+		this.btitle = btitle;
 	}
-	public String getbContent() {
-		return bContent;
+
+	public String getBcontent() {
+		return bcontent;
 	}
-	public void setbContent(String bContent) {
-		this.bContent = bContent;
+
+	public void setBcontent(String bcontent) {
+		this.bcontent = bcontent;
 	}
-	public String getbWriteDate() {
-		return bWriteDate;
+
+	public String getBwriteDate() {
+		return bwriteDate;
 	}
-	public void setbWriteDate(String bWriteDate) {
-		this.bWriteDate = bWriteDate;
+
+	public void setBwriteDate(String bwriteDate) {
+		this.bwriteDate = bwriteDate;
 	}
-	public String getmId() {
-		return mId;
+
+	public String getMid() {
+		return mid;
 	}
-	public void setmId(String mId) {
-		this.mId = mId;
+
+	public void setMid(String mid) {
+		this.mid = mid;
 	}
+
 	public int getBref() {
 		return bref;
 	}
+
 	public void setBref(int bref) {
 		this.bref = bref;
 	}
+
 	public int getBreLevel() {
 		return breLevel;
 	}
+
 	public void setBreLevel(int breLevel) {
 		this.breLevel = breLevel;
 	}
+
 	public int getBreStep() {
 		return breStep;
 	}
+
 	public void setBreStep(int breStep) {
 		this.breStep = breStep;
 	}

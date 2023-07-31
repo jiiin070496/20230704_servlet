@@ -9,8 +9,13 @@
 <head>
 <meta charset="UTF-8">
 <title>EL - </title>
+<link href="<%=request.getContextPath()%>/resources/css/reset.css" rel="stylesheet">
 </head>
 <body>
+<!-- <img alt="jpg테스트" src="/resources/images/Golde33443.jpg"><br> 
+	-> <%=request.getContextPath()%> 없으면 경로 맞지않음. -->
+<img alt="jpg테스트" src="<%=request.getContextPath()%>/resources/images/Golde33443.jpg"><br>
+
 
 <h2> EL - ExpressionLanguage <br> 단점: 자바의 for/if/변수 사용 불가 <br>보완 jstl의 foreach/if/set 변수 사용</h2>
 

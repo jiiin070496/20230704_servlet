@@ -13,23 +13,11 @@ import javax.servlet.http.HttpServletResponse;
 import kh.test.jdbckh.student.model.service.StudentService;
 import kh.test.jdbckh.student.model.vo.StudentVo;
 
-/**
- * Servlet implementation class StudentListController
- */
+
 @WebServlet("/student/list")
 public class StudentListController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public StudentListController() {
-        super();
-    }
-
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("/student/list doget() 진입");
 		// 1. 전달받은 parameter 읽어내기
@@ -86,17 +74,7 @@ public class StudentListController extends HttpServlet {
 		if(searchWord != null) {
 			request.setAttribute("searchWord", searchWord);
 		}
-//		request.setAttribute("aaa", "그냥속성값테스트해bom");
-//		request.setAttribute("bbb", "그냥속성값테스트해bom2");
-//		request.setAttribute("ccc", 333);
 		request.getRequestDispatcher("/WEB-INF/view/student/list.jsp").forward(request, response);
 	}
-
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-//	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//		doGet(request, response);
-//	}
 
 }

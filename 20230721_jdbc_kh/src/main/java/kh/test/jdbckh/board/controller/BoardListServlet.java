@@ -23,6 +23,16 @@ public class BoardListServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		System.out.println("[냄쿵] 세션 Attribute");
+		System.out.println(request.getSession().getAttribute("SsLoginId"));
+		System.out.println(request.getAttribute("SsLoginId"));
+		String msg = (String)request.getSession().getAttribute("successFailMSg");
+		if(msg != null && !msg.equals("")) {
+			request.setAttribute("successFailMsg", msg);
+			request.getSession().removeAttribute("successFailMsg");
+		}
+			
+			
 		//1. request.getParameter();
 		
 		//2. service.selectList();

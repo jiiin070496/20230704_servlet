@@ -21,7 +21,26 @@
 </head>
 <body>
 <div>
-<a href="<%=request.getContextPath()%>/login">로그인</a>
+[<%= request.getSession().getAttribute("SsLoginId") %>]<hr>
+[<%= request.getAttribute("SsLoginId") %>]<hr>
+[${SsloginId}]<hr>
+[${successMsg}]<hr>
+[${failMsg}]<hr>
+<scipt>
+	var msg = '${successFailMsg }';
+	if(msg){
+		alert(msg);
+	}		
+</scipt>
+<c:choose>
+	<c:when test="%{not empty SsLoginId}">
+		<a href="${pageContext.request.contextPath} /login">로그아웃</a>
+	</c:when>
+	<c:otherwise>
+		<a href="${pageContext.request.contextPath} /login">로그인</a>
+	</c:otherwise>
+</c:choose>
+
 </div>
 	<h2>게시글</h2>
 	<div><a href="<%=request.getContextPath() %>/board/insert">새글등록</a></div>

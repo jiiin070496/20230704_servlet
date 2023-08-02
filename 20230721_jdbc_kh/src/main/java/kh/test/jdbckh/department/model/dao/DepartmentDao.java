@@ -1,162 +1,200 @@
 package kh.test.jdbckh.department.model.dao;
 
+import static kh.test.jdbckh.common.jdbc.jdbcTemplate.close;
+
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import kh.test.jdbckh.department.model.vo.DepartmentVo;
-import kh.test.jdbckh.student.model.vo.StudentVo;
+import kh.test.jdbckh.department.model.vo.DepartmentDto;
 
 public class DepartmentDao {
-
-	public List<DepartmentVo> selectListDepartment(){
-		List<DepartmentVo> result = null;
-		Connection conn = null;
-		Statement stmt = null;
-		PreparedStatement pstmt = null;
+	//// === 기본 5 개 
+	// 모든 행 읽기
+	public List<DepartmentDto> selectList(Connection conn){
+		List<DepartmentDto> result = null;
+		String query = "select DEPARTMENT_NO, DEPARTMENT_NAME, CATEGORY, OPEN_YN, CAPACITY from tb_department";
 		
-		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "kh", "kh");
-
-			String query = "select * from tb_department";
-			pstmt = conn.prepareStatement(query);
-			ResultSet rs = pstmt.executeQuery();
-			
-			result = new ArrayList<DepartmentVo>();
-			while(rs.next() == true) {
-				DepartmentVo vo = new DepartmentVo();
-				vo.setDepartmentNo(rs.getString("department_No"));
-				vo.setDepartmentName(rs.getString("department_Name"));
-				vo.setCategory(rs.getString("category"));
-				vo.setOpenYn(rs.getString("open_Yn"));
-				vo.setCapacity(rs.getInt("capacity"));
-				
-				result.add(vo);
-			}
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if(stmt!=null) stmt.close();
-				if(pstmt!=null) pstmt.close();
-				if(conn!=null) conn.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-				
-		return result;
-		
-	}
-	public DepartmentVo selectOneDepartment(String DepartmentNo) {
-		System.out.println("DAO selectOneDepartment() arg:"+ DepartmentNo);
-
-		DepartmentVo result = null;
-		String query = "select * from tb_department where department_no = "+"'"+DepartmentNo+"'";
-		
-		Connection conn = null;
-		PreparedStatement pstmt = null;
-		ResultSet rset = null;
-		
-		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			conn = DriverManager.getConnection("jdbc:oracle:thin:@127.0.0.1:1521:xe","kh","kh");
-
-			pstmt = conn.prepareStatement(query);
-			rset = pstmt.executeQuery();
-			if(rset.next()) {
-				result = new DepartmentVo();
-				// while 동작시킬필요없음. query 결과가 단일행일 것이므로
-				result.setDepartmentNo(rset.getString("department_No"));
-				result.setDepartmentName(rset.getString("department_Name"));
-				result.setCategory(rset.getString("category"));
-				result.setOpenYn(rset.getString("open_Yn"));
-				result.setCapacity(rset.getInt("capacity"));
-				
-				
-			}
-		}catch (Exception e) {
-			e.printStackTrace();
-		}finally {
-			try {
-				if(rset!=null) rset.close();
-				if(pstmt!=null) pstmt.close();
-				if(conn!=null) conn.close();
-			} catch (Exception e2) {
-				e2.printStackTrace();
-			}
-		}
-		System.out.println(result);
-		return result;		
-	}
-	
-	public List<DepartmentVo> selectListDepartment(String searchWord){
-		List<DepartmentVo> result = null;
-		String query = "select * from tb_department where department_name like ?";
-		
-		Connection conn = null;
-		Statement stmt = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		
 		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			
-			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "kh", "kh");
-
 			pstmt = conn.prepareStatement(query);
-			//3과 4 사이 위치홀더 ? 에 값 설정
-			searchWord = "%"+searchWord+"%";  //like 연산자인 경우 % 또는 _ 를 합쳐서 만듬
-			pstmt.setString(1, searchWord);
-//			pstmt.setString(2, searchWord);
-			// 4. query문을 실행하고 그 결과값을 return받음
-			// select query 문이면 ResultSet 모양
-			// insert/update/delete 문이면 int 모양
+			rs = pstmt.executeQuery();
+			
+			result = new ArrayList<DepartmentDto>();
+			
+			while(rs.next() == true) {
+				DepartmentDto dto = new DepartmentDto();
+				
+				dto.setDepartmentNo(rs.getString("DEPARTMENT_NO"));
+				dto.setDepartmentName(rs.getString("DEPARTMENT_NAME"));
+				dto.setCategory(rs.getString("CATEGORY"));
+				dto.setOpenYn(rs.getString("OPEN_YN"));
+				dto.setCapacity(rs.getInt("CAPACITY"));
+			}
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);
+		}		
+		return result;
+	}
+	
+	// 한 행 읽기(한 행 찾기) - PK로where조건
+	public DepartmentDto selectOne(Connection conn, String departmentNo) {
+		DepartmentDto result = null;
+		String query = "select DEPARTMENT_NO, DEPARTMENT_NAME, CATEGORY, OPEN_YN, CAPACITY from tb_Department"
+					+ " where department_no = ? ";
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, departmentNo); // String query where절 ?에 대한 값.
+			rs = pstmt.executeQuery();
+						
+			if(rs.next()) {
+				result = new DepartmentDto();
+				rs.getString("DEPARTMENT_NAME");
+				rs.getString("CATEGORY");
+				rs.getString("OPEN_YN");
+				rs.getInt("CAPACITY");				
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);			
+		}
+		return result;
+	}
+	
+	
+	// 한 행 삽입 - DepartmentDto 자료형을 받아와야 함.
+	public int insert(Connection conn, DepartmentDto dto){
+		System.out.println("[Dept Dao insert] dto:"+dto);
+		int result = 0;
+		//TODO
+		System.out.println("[Dept Dao insert] return:"+result);
+		return result;
+	}
+	// 한 행 수정 - DepartmentDto 또는 경우에 따라서 특정 컬럼값만 받아오기도 함.
+	public int update(Connection conn, DepartmentDto dto){
+		System.out.println("[Dept Dao update] dto:"+dto);
+		int result = 0;
+		//TODO
+		System.out.println("[Dept Dao update] return:"+result);
+		return result;
+	}
+	// 한 행 삭제 - 주로 PK로 where조건
+	public int delete(Connection conn,String departmentNo){
+		System.out.println("[Dept Dao delete] departmentNo:"+departmentNo);
+		int result = 0;
+		//TODO
+		System.out.println("[Dept Dao delete] return:"+result);
+		return result;
+	}
+	
+	//// 추가 
+	// 페이징 처리(pageSize!=0아닐때) + 검색(있다면 where처리)
+	public int getTotalCount(Connection conn, String searchWord) {
+		System.out.println("[Dept Dao getTotalCount] searchWord:"+searchWord);
+
+		int result = 0;
+		String query = "select count(*) cnt from tb_student ";
+		if(searchWord != null) {  // 검색(있다면 where처리)
+			query += " where DEPARTMENT_NAME like ? or DEPARTMENT_NAME like ? or CATEGORY like ? ";
+			searchWord = "%"+searchWord+"%";
+		}
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			pstmt = conn.prepareStatement(query);
+			if(searchWord != null) { // 검색(있다면 where처리)
+				pstmt.setString(1, searchWord);
+				pstmt.setString(2, searchWord);
+				pstmt.setString(3, searchWord);
+			}
 			rs = pstmt.executeQuery();
 			
 			if(rs.next()) {
-				result = new ArrayList<DepartmentVo>();
-				
-				do {
-					DepartmentVo vo = new DepartmentVo();
-					vo.setDepartmentNo(rs.getString("department_No"));
-					vo.setDepartmentName(rs.getString("department_Name"));
-					vo.setCategory(rs.getString("category"));
-					vo.setOpenYn(rs.getString("open_Yn"));
-					vo.setCapacity(rs.getInt("capacity"));
-					
-					result.add(vo);
-					
-				}while(rs.next() == true);
+				result = rs.getInt("cnt");
 			}
-		
-		}  catch (ClassNotFoundException e) {
-			// 1. driver (ojdbc.jar)없음
+		}catch (SQLException e) {
 			e.printStackTrace();
+		}
+		System.out.println("[Dept Dao getTotalCount] return:"+result);
+		return result;
+	}
+	public List<DepartmentDto> selectList(Connection conn, int currentPage, int pageSize, int totalCount, String searchWord){
+		System.out.println("[Dept Dao selectList] currentPage:"+currentPage+",pageSize:"+pageSize+",totalCount:"+totalCount+",searchWord:"+searchWord);
+
+		// 페이징처리 방정식
+		int startRownum = 0;
+		int endRownum = 0;
+		if(pageSize > 0) { // 페이징 처리(pageSize!=0아닐때)
+			startRownum = (currentPage-1)*pageSize +1;
+			endRownum = ((currentPage*pageSize) > totalCount) ? totalCount: (currentPage*pageSize);
+			System.out.println("startRownum:"+startRownum+", endRownum:"+endRownum);
+		}
+		
+		List<DepartmentDto> result = new ArrayList<DepartmentDto>();
+		String subquery = " select DEPARTMENT_NO, DEPARTMENT_NAME, CATEGORY, OPEN_YN, CAPACITY from tb_department ";
+		if(searchWord != null) {  // 검색(있다면 where처리)
+			subquery += " where DEPARTMENT_NAME like ? or DEPARTMENT_NAME like ? or CATEGORY like ? ";
+			searchWord = "%"+searchWord+"%";
+		}
+		subquery += " order by OPEN_YN desc, CATEGORY asc, DEPARTMENT_NAME asc";  // 정렬순서
+		String query = subquery;
+		if(pageSize > 0) { // 페이징 처리(pageSize!=0아닐때)
+			query = " select * from ( select ROWNUM rnum, tb1.* from " +"(" + subquery + ") tb1 "+ " )" ;
+			query+= " where rnum between ? and ?";
+		} 
+		
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			pstmt = conn.prepareStatement(query);
+			if(searchWord != null) {  // 검색(있다면 where처리)
+				pstmt.setString(1, searchWord);
+				pstmt.setString(2, searchWord);
+				pstmt.setString(3, searchWord);
+			}
+			if(searchWord != null && pageSize > 0) { // 검색(있다면 where처리) // 페이징 처리(pageSize!=0아닐때)
+				pstmt.setInt(4, startRownum);
+				pstmt.setInt(5, endRownum);
+			} else if(searchWord == null && pageSize > 0) {// 페이징 처리(pageSize!=0아닐때)
+				pstmt.setInt(1, startRownum);
+				pstmt.setInt(2, endRownum);
+			}
+			rs = pstmt.executeQuery();
+			
+			while(rs.next() == true) {
+//				DEPARTMENT_NO
+//				DEPARTMENT_NAME
+//				CATEGORY
+//				OPEN_YN
+//				CAPACITY
+				DepartmentDto dto = new DepartmentDto();
+				dto.setDepartmentNo( rs.getString("DEPARTMENT_NO"));
+				dto.setDepartmentName( rs.getString("DEPARTMENT_NAME"));
+				dto.setCategory( rs.getString("CATEGORY"));
+				dto.setOpenYn( rs.getString("OPEN_YN"));
+				dto.setCapacity( rs.getInt("CAPACITY"));
+				result.add(dto);
+			}
 		} catch (SQLException e) {
-			// 2. DBMS 연결실패
 			e.printStackTrace();
 		} finally {
-			try {
-				if (rs!=null)
-					rs.close();
-				if (pstmt!=null)
-					pstmt.close();
-				if (conn!=null)
-					conn.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+			close(rs);
+			close(pstmt);
 		}
+		System.out.println("[Dept Dao selectList] return:"+result);
 		return result;
-		
 	}
 }

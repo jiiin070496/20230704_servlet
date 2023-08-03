@@ -19,9 +19,6 @@ import kh.test.jdbckh.board.model.service.BoardService;
 public class BoardListServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("[냄쿵] 세션 Attribute");
 		System.out.println(request.getSession().getAttribute("SsLoginId"));
@@ -44,12 +41,7 @@ public class BoardListServlet extends HttpServlet {
 		System.out.println(result);
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
-	}
-
+//	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+//
+//	}
 }

@@ -62,7 +62,7 @@ public class BoardDao {
 			query = "insert into Board values(SEQ_BOARD_BNO.nextval, ?, ?, default, ?, SEQ_BOARD_BNO.nextval, 0, 0)";
 		}else { // 답글작성
 			query = "insert into BOARD values (SEQ_BOARD_BNO.nextval, ?, ?, default, ?, (select bref from board where bno=?), (select bre_level+1 from board where bno=?), (select bre_step+1 from board where bno=?))";
-		}		
+		}	
 		PreparedStatement pstmt = null;
 		
 		try {

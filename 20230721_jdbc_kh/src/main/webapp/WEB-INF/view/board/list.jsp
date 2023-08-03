@@ -21,17 +21,21 @@
 </head>
 <body>
 <div>
+<%-- 
 [<%= request.getSession().getAttribute("SsLoginId") %>]<hr>
-[<%= request.getAttribute("SsLoginId") %>]<hr>
-[${SsloginId}]<hr>
+[<%= request.getAttribute("SsLoginId") %>]<hr> 
+
+ [${SsloginId}]<hr>
 [${successMsg}]<hr>
 [${failMsg}]<hr>
 <scipt>
 	var msg = '${successFailMsg }';
 	if(msg){
 		alert(msg);
-	}		
+	}		 
+
 </scipt>
+--%>
 <c:choose>
 	<c:when test="%{not empty SsLoginId}">
 		<a href="${pageContext.request.contextPath} /login">로그아웃</a>

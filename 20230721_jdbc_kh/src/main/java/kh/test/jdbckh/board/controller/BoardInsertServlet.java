@@ -38,9 +38,6 @@ public class BoardInsertServlet extends HttpServlet {
 		request.getRequestDispatcher("/WEB-INF/view/board/insert.jsp").forward(request, response);
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("/board/insert POST!!!!!!!!!");
 		String btitle = request.getParameter("btitle");
@@ -62,15 +59,8 @@ public class BoardInsertServlet extends HttpServlet {
 			}
 		}
 		
-		// bno : 0이면 원본글, 그외 답글의 참조번호
-//		int result  = service.insert(new BoardDto(bno, btitle, bcontent, mid));
-//		if(result < 0) {
-//			// 오류 발생
-//			// 오류 페이지로 이동함.
-//			// TODO
-//		}
-		
 		response.sendRedirect(request.getContextPath()+"/board/list");
+
 	}
 
 	

@@ -12,9 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import kh.test.jdbckh.board.model.dto.BoardDto;
 import kh.test.jdbckh.board.model.service.BoardService;
 
-/**
- * Servlet implementation class BoardListServlet
- */
+
 @WebServlet("/board/list")
 public class BoardListServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;

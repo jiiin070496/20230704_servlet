@@ -11,10 +11,12 @@
 <head>
 <meta charset="UTF-8">
 <title>학생 리스트</title>
+<jsp:include page="/WEB-INF/view/msg/msg.jsp"></jsp:include>
 </head>
 <body>
 	<h2>학생 리스트 -EL</h2>
 	<div><a href="<%=request.getContextPath()%>/student/insert">학생등록</a></div>
+	
 	<div>
 		<form action="<%=request.getContextPath()%>/student/list" method="get">
 			<input type="search" name="searchWord"> <input type="submit" value="찾기">

@@ -1,5 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"   pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -16,8 +16,14 @@
 					<td><input type="text" name="studentNo"></td>
 				</tr>
 				<tr>
-					<th>departmentNo</th>
-					<td><input type="text" name="departmentNo"></td>
+					<th>학과 번호</th>
+					<td>
+						<select name="departmentNo">
+					<c:forEach items="${deptList }" var="vo">
+							<option value="${vo.departmentNo }">${vo.departmentName }</option>					
+					</c:forEach>						
+						</select>
+					</td>
 				</tr>
 				<tr>
 					<th>studentName</th>
@@ -41,7 +47,14 @@
 				</tr>
 				<tr>
 					<th>coachProfessorNo</th>
-					<td><input type="text" name="coachProfessorNo"></td>
+					<td>
+						<input name="coachProfessorNo" list="profList">
+						<datalist id="profList">
+					<c:forEach items="${profList}" var="vo"> 
+						<option value="${vo.professorNo }">${vo.professorName }</option>
+					</c:forEach>
+						</datalist>
+					</td>
 				</tr>
 			</table>
 			

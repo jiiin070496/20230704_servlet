@@ -51,7 +51,7 @@ public class DepartmentService {
 		return result;
 	}
 	
-	//// 추가 
+	//// 추가 ////
 	// 페이징 처리 + 검색
 	public int getTotalCount(String searchWord) {
 		int result = 0;
@@ -68,4 +68,20 @@ public class DepartmentService {
 		close(conn);
 		return result;
 	}
+	
+	// 학생등록시 필요한 학과정보를 리스트 읽기
+	public List<DepartmentDto> selectListforStudent(){
+		List<DepartmentDto> result = null;
+		Connection conn = getConnection();
+		result = dao.selectList(conn);
+		close(conn);
+		return result;
+	}
+	
+	
+	
+	
+	
+	
+	
 }

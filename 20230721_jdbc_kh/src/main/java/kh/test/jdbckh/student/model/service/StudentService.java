@@ -77,4 +77,22 @@ public class StudentService {
 		close(conn);
 		return result;
 	}
+	
+	public List<StudentVo> selectListProfessorForStudent() {
+		Connection conn = getConnection();
+		List<StudentVo> result = dao.selectListProfessorForStudent(conn);
+		close(conn);
+		return result;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

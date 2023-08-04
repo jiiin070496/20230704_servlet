@@ -80,7 +80,7 @@ public class DepartmentDao {
 		System.out.println("[Dept Dao insert] dto:"+dto);
 		int result = 0;
 		//TODO
-		System.out.println("[Dept Dao insert] return:"+result);
+		System.out.println("[Dept Dao insert] return:" + result);
 		return result;
 	}
 	// 한 행 수정 - DepartmentDto 또는 경우에 따라서 특정 컬럼값만 받아오기도 함.
@@ -195,6 +195,35 @@ public class DepartmentDao {
 			close(pstmt);
 		}
 		System.out.println("[Dept Dao selectList] return:"+result);
+		return result;
+	}
+	
+	// 학생등록시 필요한 학과정보를 읽기
+	public List<DepartmentDto> selectListforStudent(Connection conn){
+		List<DepartmentDto> result = null;
+		String query = "select DEPARTMENT_NO, DEPARTMENT_NAME from tb_department where open_yn='Y'";
+		
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		try {
+			pstmt = conn.prepareStatement(query);
+			rs = pstmt.executeQuery();			
+			result = new ArrayList<DepartmentDto>();
+			
+			while(rs.next() == true) {
+				DepartmentDto dto = new DepartmentDto();
+				
+				dto.setDepartmentNo(rs.getString("DEPARTMENT_NO"));
+				dto.setDepartmentName(rs.getString("DEPARTMENT_NAME"));
+				result.add(dto);				
+			}
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);
+		}		
 		return result;
 	}
 }
